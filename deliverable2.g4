@@ -1,15 +1,13 @@
 grammar deliverable2;
 
-// Parser
 program
     : statement* EOF
     ;
 
-
 statement
     : assignment NEWLINE*
     | compoundAssignment NEWLINE*
-    | ifBlock
+    | ifBlock NEWLINE*
     ;
 
 innerStatement
@@ -18,9 +16,7 @@ innerStatement
     ;
 
 ifBlock
-    : IF expr COLON NEWLINE innerStatement+
-      (elifBlock)*
-      (elseBlock)?
+    : IF expr COLON NEWLINE innerStatement+ (elifBlock)* (elseBlock)?
     ;
 
 elifBlock
@@ -45,7 +41,7 @@ expr
     | array
     | ID
     | literal
-    | '-' expr //For negatives
+    | '-' expr  //For negatives
     | expr ('*' | '/' | '%') expr
     | expr ('+' | '-') expr
     | expr ( '<' | '<=' | '>' | '>=' | '==' | '!=' ) expr
@@ -67,51 +63,49 @@ literal
     ;
 
 // Lexer
-
 // Keywords
-IF      : 'if' ;
-ELIF    : 'elif' ;
-ELSE    : 'else' ;
-AND     : 'and' ;
-OR      : 'or' ;
-NOT     : 'not' ;
+IF : 'if' ;
+ELIF : 'elif' ;
+ELSE : 'else' ;
+AND : 'and' ;
+OR : 'or' ;
+NOT : 'not' ;
+BOOL : 'True' | 'False' ;
 
-BOOL    : 'True' | 'False' ;
-
-ID      : [a-zA-Z_][a-zA-Z0-9_]* ;
-INT     : [0-9]+ ;
-FLOAT   : [0-9]+ '.' [0-9]+ ;
+ID : [a-zA-Z_][a-zA-Z0-9_]* ;
+INT : [0-9]+ ;
+FLOAT : [0-9]+ '.' [0-9]+ ;
 STRING
-    : '"' (~["\\\r\n] | '\\' . )* '"'   // double-quoted string
-    | '\'' (~['\\\r\n] | '\\' . )* '\'' // single-quoted string
+    : '"' (~["\\\r\n] | '\\' . )* '"'
+    | '\'' (~['\\\r\n] | '\\' . )* '\''
     ;
 
 // Operators and symbols
-PLUS    : '+' ;
-MINUS   : '-' ;
-MULT    : '*' ;
-DIV     : '/' ;
-MOD     : '%' ;
-ASSIGN  : '=' ;
-PLUSEQ  : '+=' ;
+PLUS : '+' ;
+MINUS : '-' ;
+MULT : '*' ;
+DIV : '/' ;
+MOD : '%' ;
+ASSIGN : '=' ;
+PLUSEQ : '+=' ;
 MINUSEQ : '-=' ;
-MULTEQ  : '*=' ;
-DIVEQ   : '/=' ;
-LPAREN  : '(' ;
-RPAREN  : ')' ;
-LBRACK  : '[' ;
-RBRACK  : ']' ;
-COMMA   : ',' ;
+MULTEQ : '*=' ;
+DIVEQ : '/=' ;
+LPAREN : '(' ;
+RPAREN : ')' ;
+LBRACK : '[' ;
+RBRACK : ']' ;
+COMMA : ',' ;
+
 // Additional ones
-LE      : '<=' ;
-GE      : '>=' ;
-EQEQ    : '==' ;
-NEQ     : '!=' ;
-LT      : '<' ;
-GT      : '>' ;
-COLON   : ':' ;
+LE : '<=' ;
+GE : '>=' ;
+EQEQ : '==' ;
+NEQ : '!=' ;
+LT : '<' ;
+GT : '>' ;
+COLON : ':' ;
 
 // Whitespace and newlines
-WS      : [ \t]+ -> skip ;
-
-NEWLINE	: '\r'? '\n' ;
+WS : [ \t]+ -> skip ;
+NEWLINE : '\r'? '\n' ;
