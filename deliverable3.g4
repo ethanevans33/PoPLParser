@@ -1,8 +1,8 @@
-grammar deliverable2;
+grammar deliverable3;
 
 // Parser
 program
-    : statement* EOF
+    : (statement NEWLINE*)* EOF
     ;
 
 indentedBlock
@@ -13,17 +13,22 @@ statement
     : assignment NEWLINE*
     | compoundAssignment NEWLINE*
     | ifBlock
+    | whileBlock
+    | forBlock
     ;
 
 innerStatement
     : assignment NEWLINE*
     | compoundAssignment NEWLINE*
+    | ifBlock
+    | whileBlock
+    | forBlock
     ;
 
 ifBlock
     : IF expr COLON NEWLINE indentedBlock
-      (elifBlock)*
-      (elseBlock)?
+      (INDENT* elifBlock)*
+      (INDENT* elseBlock)?
     ;
 
 elifBlock
@@ -42,10 +47,19 @@ compoundAssignment
     : ID ('+=' | '-=' | '*=' | '/=') expr
     ;
 
+whileBlock
+    : WHILE expr COLON NEWLINE indentedBlock
+    ;
+
+forBlock
+    : FOR ID IN expr COLON NEWLINE indentedBlock
+    ;
+
 // Expressions
 expr
     : '(' expr ')'
     | array
+    | functionCall
     | ID
     | literal
     | '-' expr //For negatives
@@ -55,6 +69,10 @@ expr
     | expr AND expr
     | expr OR expr
     | NOT expr
+    ;
+
+functionCall
+    : ID '(' (expr (',' expr)*)? ')'
     ;
 
 array
@@ -75,6 +93,9 @@ literal
 IF      : 'if' ;
 ELIF    : 'elif' ;
 ELSE    : 'else' ;
+WHILE   : 'while' ;
+FOR     : 'for' ;
+IN      : 'in' ;
 AND     : 'and' ;
 OR      : 'or' ;
 NOT     : 'not' ;
@@ -116,6 +137,14 @@ COLON   : ':' ;
 
 // Whitespace and newlines
 WS      : [ ]+ -> skip ;
+
+LINE_COMMENT
+    : '#' ~[\r\n]* -> skip
+    ;
+
+BLOCK_COMMENT
+    : '\'\'\'' .*? '\'\'\'' -> skip
+    ;
 
 NEWLINE	: '\r'? '\n' ;
 
